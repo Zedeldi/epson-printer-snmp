@@ -8,6 +8,7 @@ Read information and reset waste ink counters on Epson printers, using SNMP.
 
 This project was designed for a EPSON WF-7525 Series printer, but inspired by [projects](#resources) for other models.
 Hopefully, releasing this code will help save a printer from the trash and improve consumer repairability for these devices.
+Feel free to raise an issue for adding support for another model of printer, with logs from `wicreset` or similar attached.
 
 The format for reading values is:
 
