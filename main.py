@@ -40,7 +40,7 @@ class Printer:
         self.session = Session(printer=self)
 
     @property
-    def stats(self) -> dict[str, str | int]:
+    def stats(self) -> dict[str, Any]:
         """Return information about the printer."""
         methods = [
             "get_model_full",
