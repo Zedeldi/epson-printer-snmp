@@ -34,6 +34,15 @@ class Model:
         except KeyError as err:
             raise KeyError(f"Model '{model}' not found.") from err
 
+    @classmethod
+    def select(self: Type["Model"]) -> str:
+        """Interactively select a model from the list."""
+        models = sorted(list(self.get_all().keys()), key=str.lower)
+        for idx, name in enumerate(models):
+            print(f"{idx}: {name}")
+        select_idx = int(input("Select model: "))
+        return models[select_idx]
+
 
 @dataclass
 class Printer:
@@ -206,12 +215,17 @@ if __name__ == "__main__":
     from pprint import pprint
 
     fn, *args = sys.argv
-    if len(args) < 2:
+    if not args:
+        host = input("IP address of printer: ")
+        model = Model.select()
+    elif args[0].lower() in ("-h", "--help") or len(args) < 2:
         models = list(Model.get_all().keys())
         print(f"Usage: {fn} <IP address of printer> <model of printer>")
         print(f"Supported models: {models}")
         sys.exit(1)
-    model = " ".join(args[1:])
-    printer = Printer.from_model(args[0], model)
+    else:
+        host = args[0]
+        model = " ".join(args[1:])
+    printer = Printer.from_model(host, model)
     session = Session(printer)
     pprint(printer.stats)
