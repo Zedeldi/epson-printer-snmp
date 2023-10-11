@@ -20,6 +20,7 @@ class Printer:
     hostname: str
     password: list[int] = field(default_factory=lambda: [101, 0])
     eeprom_link: str = "1.3.6.1.4.1.1248.1.2.2.44.1.1.2.1"
+    eeprom_write: str = "84.98.116.98.111.114.118.98"
     ink_levels: dict = field(
         default_factory=lambda: {
             "black": 0x1C,
@@ -90,7 +91,7 @@ class Session(easysnmp.Session):
             f".{self.printer.password[1]}"
             ".66.189.33"
             f".{oid}.0.{value}"
-            ".84.98.116.98.111.114.118.98"
+            ".{self.printer.eeprom_write}"
         )
 
     def read_eeprom(self, oid: int) -> str:
