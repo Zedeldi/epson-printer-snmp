@@ -2,15 +2,37 @@
 SNMP handler for Epson printers.
 
 Based on https://github.com/gentu/reink-net/blob/master/reink-net.rb
-Modified for the EPSON WF-7525 Series
+Originally modified for the EPSON WF-7525 Series.
 """
 
 import itertools
+import json
 import re
-from dataclasses import dataclass, field
-from typing import Any, Optional
+from dataclasses import dataclass
+from typing import Any, Optional, Type
 
 import easysnmp
+
+
+class Model:
+    """Class to handle known printer models."""
+
+    JSON_PATH = "models.json"
+
+    @classmethod
+    def get_all(self: Type["Model"]) -> dict:
+        """Return dictionary of all known models."""
+        with open(self.JSON_PATH, "r") as fd:
+            return json.load(fd)
+
+    @classmethod
+    def get(self: Type["Model"], model: str) -> dict:
+        """Return dictionary for specified model."""
+        models = self.get_all()
+        try:
+            return models[model]
+        except KeyError as err:
+            raise KeyError(f"Model '{model}' not found.") from err
 
 
 @dataclass
@@ -18,30 +40,23 @@ class Printer:
     """Dataclass to store information about a printer."""
 
     hostname: str
-    password: list[int] = field(default_factory=lambda: [101, 0])
-    eeprom_link: str = "1.3.6.1.4.1.1248.1.2.2.44.1.1.2.1"
-    eeprom_write: str = "84.98.116.98.111.114.118.98"
-    ink_levels: dict = field(
-        default_factory=lambda: {
-            "black": 0x1C,
-            "magenta": 0x1F,
-            "yellow": 0x22,
-            "cyan": 0x25,
-        }
-    )
-    waste_inks: list[dict] = field(
-        default_factory=lambda: [
-            {"oids": [20, 21], "total": 19650},
-            {"oids": [22, 23], "total": 5205},
-        ]
-    )
+    password: list[int]
+    eeprom_link: str
+    eeprom_write: str
+    ink_levels: dict[str, int]
+    waste_inks: list[dict]
 
-    def __post_init__(self) -> None:
-        """Initialise printer instance."""
+    def __post_init__(self: "Printer") -> None:
+        """Initialise printer instance with a session."""
         self.session = Session(printer=self)
 
+    @classmethod
+    def from_model(cls: Type["Printer"], hostname: str, model: str) -> "Printer":
+        """Return printer instance from known models in path."""
+        return cls(hostname=hostname, **Model.get(model))
+
     @property
-    def stats(self) -> dict[str, Any]:
+    def stats(self: "Printer") -> dict[str, Any]:
         """Return information about the printer."""
         methods = [
             "get_model_full",
@@ -59,7 +74,7 @@ class Session(easysnmp.Session):
     """SNMP session wrapper."""
 
     def __init__(
-        self, printer: Printer, community: str = "public", version: int = 1
+        self: "Session", printer: Printer, community: str = "public", version: int = 1
     ) -> None:
         """Initialise session."""
         self.printer = printer
@@ -67,11 +82,11 @@ class Session(easysnmp.Session):
             hostname=self.printer.hostname, community=community, version=version
         )
 
-    def get_value(self, oids: str) -> str:
+    def get_value(self: "Session", oids: str) -> str:
         """Return value of OIDs."""
         return self.get(oids).value
 
-    def get_read_eeprom_oid(self, oid: int) -> str:
+    def get_read_eeprom_oid(self: "Session", oid: int) -> str:
         """Return address for reading from EEPROM for specified OID."""
         return (
             f"{self.printer.eeprom_link}"
@@ -82,7 +97,7 @@ class Session(easysnmp.Session):
             f".{oid}.0"
         )
 
-    def get_write_eeprom_oid(self, oid: int, value: Any) -> str:
+    def get_write_eeprom_oid(self: "Session", oid: int, value: Any) -> str:
         """Return address for writing to EEPROM for specified OID."""
         return (
             f"{self.printer.eeprom_link}"
@@ -94,7 +109,7 @@ class Session(easysnmp.Session):
             ".{self.printer.eeprom_write}"
         )
 
-    def read_eeprom(self, oid: int) -> str:
+    def read_eeprom(self: "Session", oid: int) -> str:
         """Read EEPROM data."""
         response = self.get_value(self.get_read_eeprom_oid(oid))
         response = re.findall(r"EE:[0-9A-F]{6}", response)[0][3:]
@@ -106,30 +121,30 @@ class Session(easysnmp.Session):
             )
         return value
 
-    def read_eeprom_many(self, oids: list[int]) -> list[str]:
+    def read_eeprom_many(self: "Session", oids: list[int]) -> list[str]:
         """Read EEPROM data with multiple values."""
         return [self.read_eeprom(oid) for oid in oids]
 
-    def write_eeprom(self, oid: int, value: int) -> None:
+    def write_eeprom(self: "Session", oid: int, value: int) -> None:
         """Write value to OID with specified type to EEPROM."""
         self.get(self.get_write_eeprom_oid(oid, value))
 
-    def dump_eeprom(self, start: int = 0, end: int = 0xFF) -> dict[int, int]:
+    def dump_eeprom(self: "Session", start: int = 0, end: int = 0xFF) -> dict[int, int]:
         """Dump EEPROM data from start to end."""
         d = {}
         for oid in range(start, end):
             d[oid] = int(self.read_eeprom(oid), 16)
         return d
 
-    def get_model(self) -> str:
+    def get_model(self: "Session") -> str:
         """Return model of printer."""
         return self.get_value("1.3.6.1.2.1.1.5.0")
 
-    def get_model_full(self) -> str:
+    def get_model_full(self: "Session") -> str:
         """Return full model of printer."""
         return self.get_value("1.3.6.1.2.1.25.3.2.1.3.1")
 
-    def get_serial_number(self) -> str:
+    def get_serial_number(self: "Session") -> str:
         """Return serial number of printer."""
         return "".join(
             chr(int(value, 16))
@@ -138,11 +153,11 @@ class Session(easysnmp.Session):
             )
         )
 
-    def get_eeps2_version(self) -> str:
+    def get_eeps2_version(self: "Session") -> str:
         """Return EEPS2 version."""
         return self.get_value("1.3.6.1.2.1.2.2.1.2.1")
 
-    def get_ink_levels(self) -> dict[str, int]:
+    def get_ink_levels(self: "Session") -> dict[str, int]:
         """Return ink levels of printer."""
         result = self.get_value(f"{self.printer.eeprom_link}.115.116.1.0.1")
         d = {
@@ -150,7 +165,7 @@ class Session(easysnmp.Session):
         }
         return d
 
-    def get_waste_ink_levels(self) -> list[float]:
+    def get_waste_ink_levels(self: "Session") -> list[float]:
         """Return waste ink levels as a percentage."""
         results = []
         for waste_ink in self.printer.waste_inks:
@@ -159,7 +174,7 @@ class Session(easysnmp.Session):
             results.append(round((level_b10 / waste_ink["total"]) * 100, 2))
         return results
 
-    def reset_waste_ink_levels(self) -> None:
+    def reset_waste_ink_levels(self: "Session") -> None:
         """
         Set waste ink levels to 0.
 
@@ -171,7 +186,7 @@ class Session(easysnmp.Session):
             self.write_eeprom(oid, value)
 
     def brute_force(
-        self, minimum: int = 0x00, maximum: int = 0xFF
+        self: "Session", minimum: int = 0x00, maximum: int = 0xFF
     ) -> Optional[list[int]]:
         """Brute force password for printer."""
         for x, y in itertools.permutations(range(minimum, maximum), r=2):
@@ -191,9 +206,12 @@ if __name__ == "__main__":
     from pprint import pprint
 
     fn, *args = sys.argv
-    if not args:
-        print(f"Usage: {fn} <IP address of printer>")
+    if len(args) < 2:
+        models = list(Model.get_all().keys())
+        print(f"Usage: {fn} <IP address of printer> <model of printer>")
+        print(f"Supported models: {models}")
         sys.exit(1)
-    printer = Printer(args[0])
+    model = " ".join(args[1:])
+    printer = Printer.from_model(args[0], model)
     session = Session(printer)
     pprint(printer.stats)
