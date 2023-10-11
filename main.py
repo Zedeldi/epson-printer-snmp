@@ -9,6 +9,7 @@ import itertools
 import json
 import re
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any, Optional, Type
 
 import easysnmp
@@ -17,7 +18,7 @@ import easysnmp
 class Model:
     """Class to handle known printer models."""
 
-    JSON_PATH = "models.json"
+    JSON_PATH = Path(__file__).absolute().parent / "models.json"
 
     @classmethod
     def get_all(self: Type["Model"]) -> dict:
