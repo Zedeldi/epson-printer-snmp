@@ -21,24 +21,24 @@ class Model:
     JSON_PATH = Path(__file__).absolute().parent / "models.json"
 
     @classmethod
-    def get_all(self: Type["Model"]) -> dict:
+    def get_all(cls: Type["Model"]) -> dict:
         """Return dictionary of all known models."""
-        with open(self.JSON_PATH, "r") as fd:
+        with open(cls.JSON_PATH, "r") as fd:
             return json.load(fd)
 
     @classmethod
-    def get(self: Type["Model"], model: str) -> dict:
+    def get(cls: Type["Model"], model: str) -> dict:
         """Return dictionary for specified model."""
-        models = self.get_all()
+        models = cls.get_all()
         try:
             return models[model]
         except KeyError as err:
             raise KeyError(f"Model '{model}' not found.") from err
 
     @classmethod
-    def select(self: Type["Model"]) -> str:
+    def select(cls: Type["Model"]) -> str:
         """Interactively select a model from the list."""
-        models = sorted(list(self.get_all().keys()), key=str.lower)
+        models = sorted(list(cls.get_all().keys()), key=str.lower)
         for idx, name in enumerate(models):
             print(f"{idx}: {name}")
         select_idx = int(input("Select model: "))
