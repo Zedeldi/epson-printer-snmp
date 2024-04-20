@@ -53,7 +53,7 @@ epson-l4160-ink-waste-resetter = <https://github.com/nicootto/epson-l4160-ink-wa
 
 wicreset = <https://wic-reset.com> / <https://www.2manuals.com> / <https://resetters.com>
   - The key, `trial`, can be used to reset your counters to 80%. After packet sniffing with `wireshark`, the correct OIDs can be found
-  - This application also stores a log containing SNMP information at `~/.wicreset/application.log`
+  - This application also stores a log containing SNMP information at `~/.wicreset/application.log` on Linux-based systems, or `%APPDATA%\wicreset\application.log` on Windows.
 
 ## License
 
