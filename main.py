@@ -55,6 +55,8 @@ class Printer:
     eeprom_write: str
     ink_levels: dict[str, int]
     waste_inks: list[dict]
+    maintenance_levels: list[int]
+    unknown_oids: list[int]
 
     def __post_init__(self: "Printer") -> None:
         """Initialise printer instance with a session."""
@@ -179,6 +181,8 @@ class Session(easysnmp.Session):
         """Return waste ink levels as a percentage."""
         results = []
         for waste_ink in self.printer.waste_inks:
+            if waste_ink["total"] is None:
+                continue
             level = self.read_eeprom_many(waste_ink["oids"])
             level_b10 = int("".join(reversed(level)), 16)
             results.append(round((level_b10 / waste_ink["total"]) * 100, 2))
@@ -191,7 +195,16 @@ class Session(easysnmp.Session):
         hex(int((80 / 100) * 19650)) == 0x3d68
         hex(104), hex(61) = (0x68, 0x3d)
         """
-        data = {20: 0, 21: 0, 22: 0, 23: 0, 24: 0, 25: 0, 59: 0, 60: 94, 61: 94}
+        waste_inks = {
+            oid: 0 for waste_ink in self.printer.waste_inks for oid in waste_ink["oids"]
+        }
+        maintenance_levels = {
+            maintenance_level: 94
+            for maintenance_level in self.printer.maintenance_levels
+        }
+        data = {unknown_oid: 0 for unknown_oid in self.printer.unknown_oids}
+        data.update(waste_inks)
+        data.update(maintenance_levels)
         for oid, value in data.items():
             self.write_eeprom(oid, value)
 
