@@ -28,7 +28,7 @@ Certain values of these formats also vary between models of printer.
 Various methods are defined to get specific information.
 The `Printer.stats` method will return a dictionary of most useful information.
 
-Values for waste ink levels are stored in two addresses, which, when reversed, combine to make a value in hex.
+Values for waste ink levels are stored across multiple addresses, which, when reversed, combine to make a value in hex.
 This value is then divided by a constant, which again seems to vary across models of printer, to make the percentage.
 The constant value can be found by using `wicreset` to read the counters' percentage, getting the hex values of these OIDs, then following the above process to solve:
 e.g.
@@ -39,6 +39,47 @@ e.g.
 (0x3d68 / 80) * 100 = 19650.0
 ```
 Please note that different counters for the same printer may use different constants.
+
+Courtesy of [@PeaShooterR](https://github.com/PeaShooterR), some models of printers seem to store waste ink counters in a slightly different way, across three counters instead of two (see issue [#1](https://github.com/Zedeldi/epson-printer-snmp/issues/1)).
+
+To compare, `wicreset` writes the following values for the specified model of printer:
+
+<table>
+<tr><th>WF-7525</th><th>PX-047A</th></tr>
+<tr><td>
+
+| OID | Value | Usage               |
+|-----|-------|---------------------|
+| 20  | 104   | Counter 1 (shown)   |
+| 21  | 61    | Counter 1 (shown)   |
+| 22  | 68    | Counter 2 (shown)   |
+| 23  | 16    | Counter 2 (shown)   |
+| 24  | 0     | Counter 1 (real)    |
+| 25  | 0     | Counter 1 (real)    |
+| 59  | 0     | Unknown             |
+| 60  | 94    | Maintenance level 1 |
+| 61  | 94    | Maintenance level 2 |
+
+</td><td>
+
+| OID | Value | Usage               |
+|-----|-------|---------------------|
+| 24  | 120   | Counter 1 (shown)   |
+| 25  | 12    | Counter 1 (shown)   |
+| 26  | 44    | Counter 2 (shown)   |
+| 27  | 10    | Counter 2 (shown)   |
+| 30  | 0     | Counter 1 (shown)   |
+| 28  | 0     | Counter 1 (real)    |
+| 29  | 0     | Counter 1 (real)    |
+| 34  | 0     | Counter 2 (shown)   |
+| 46  | 94    | Maintenance level 1 |
+| 47  | 94    | Maintenance level 2 |
+| 49  | 0     | Unknown             |
+
+</td></tr> </table>
+
+> Whenever a print job is received, the printer will compare the REAL data and the SHOWN data, then updates SHOWN data to the larger value.
+> After performing operations such as head cleaning that increase the counter, the printer increments the SHOWN data and saves it to both (24, 25, 30) and (28, 29).
 
 ## Libraries
 
