@@ -7,17 +7,21 @@
     let
       supportedSystems = [ "x86_64-linux" "aarch64-linux" "x86_64-darwin" "aarch64-darwin" ];
       forEachSupportedSystem = f: nixpkgs.lib.genAttrs supportedSystems (system: f {
-        pkgs = import nixpkgs { inherit system; config.allowUnfree = true; };
+        pkgs = import nixpkgs { inherit system; };
       });
     in
     {
       devShells = forEachSupportedSystem ({ pkgs }: {
         default = pkgs.mkShell {
           venvDir = ".venv";
-          packages = with pkgs; [ python311 ] ++
+          packages = with pkgs; [
+            python311
+            net-snmp
+            openssl
+          ] ++
             (with pkgs.python311Packages; [
-              pip venvShellHook
-              net-snmp openssl
+              pip
+              venvShellHook
             ]);
         };
       });
