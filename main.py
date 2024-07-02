@@ -118,7 +118,7 @@ class Session(easysnmp.Session):
             f".{self.printer.password[1]}"
             ".66.189.33"
             f".{oid}.0.{value}"
-            ".{self.printer.eeprom_write}"
+            f".{self.printer.eeprom_write}"
         )
 
     def read_eeprom(self: "Session", oid: int) -> str:
