@@ -11,6 +11,8 @@ import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Optional, Type
+import argparse
+from pprint import pprint
 
 import easysnmp
 
@@ -223,23 +225,32 @@ class Session(easysnmp.Session):
                 continue
         return None
 
-
-if __name__ == "__main__":
-    import sys
-    from pprint import pprint
-
-    fn, *args = sys.argv
-    if not args:
-        host = input("IP address of printer: ")
-        model = Model.select()
-    elif args[0].lower() in ("-h", "--help") or len(args) < 2:
-        models = list(Model.get_all().keys())
-        print(f"Usage: {fn} <IP address of printer> <model of printer>")
-        print(f"Supported models: {models}")
-        sys.exit(1)
-    else:
-        host = args[0]
-        model = " ".join(args[1:])
+def main(host, model, reset):
     printer = Printer.from_model(host, model)
     session = Session(printer)
     pprint(printer.stats)
+
+    if reset:
+        session.reset_waste_ink_levels()
+        print("\nReset done! New stats:")
+        pprint(printer.stats)
+
+def parse_arguments():
+    parser = argparse.ArgumentParser(description="SNMP handler for Epson printers.")
+    parser.add_argument("host", nargs="?", help="IP address of the printer")
+    parser.add_argument("model", nargs='*', help="Model of the printer")
+    parser.add_argument("-r", "--reset", action="store_true", help="Reset printer waste ink counter")
+
+    args = parser.parse_args()
+
+    if args.host == None:
+        args.host = input("IP address of printer: ")
+    if args.model == []:
+        args.model = Model.select()
+    else:
+        args.model = ' '.join(args.model)
+
+    return vars(args)
+
+if __name__ == '__main__':
+    main(**parse_arguments())
