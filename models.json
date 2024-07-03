@@ -29,5 +29,18 @@
     ],
     "maintenance_levels": [46, 47],
     "unknown_oids": [49]
+  },
+  "EPSON ET-2756": {
+    "password": [73, 8],
+    "eeprom_link": "1.3.6.1.4.1.1248.1.2.2.44.1.1.2.1",
+    "eeprom_write": "66.115.98.111.117.106.103.112",
+    "ink_levels": {},
+    "waste_inks": [
+      {"oids": [48, 49], "total": 10912.5},
+      {"oids": [50, 51], "total": 1645.0},
+      {"oids": [52, 53], "total": null}
+    ],
+    "maintenance_levels": [54, 55],
+    "unknown_oids": [28, 47]
   }
 }
