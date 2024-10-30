@@ -9,6 +9,7 @@ import argparse
 import itertools
 import json
 import re
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 from pprint import pprint
@@ -233,6 +234,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "-r", "--reset", action="store_true", help="Reset printer waste ink counters"
     )
+    parser.add_argument(
+        "-b", "--brute-force", action="store_true", help="Brute force printer password"
+    )
 
     args = parser.parse_args()
 
@@ -253,6 +257,10 @@ def main() -> None:
     printer = Printer.from_model(args.host, args.model)
     session = Session(printer)
 
+    if args.brute_force:
+        if not session.brute_force():
+            print("Failed to find printer password. Exiting...")
+            sys.exit(1)
     if args.reset:
         session.reset_waste_ink_levels()
     pprint(printer.stats)
