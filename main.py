@@ -5,14 +5,14 @@ Based on https://github.com/gentu/reink-net/blob/master/reink-net.rb
 Originally modified for the EPSON WF-7525 Series.
 """
 
+import argparse
 import itertools
 import json
 import re
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Optional, Type
-import argparse
 from pprint import pprint
+from typing import Any, Optional, Type
 
 import easysnmp
 
@@ -221,32 +221,42 @@ class Session(easysnmp.Session):
                 continue
         return None
 
-def main(host, model, reset):
-    printer = Printer.from_model(host, model)
-    session = Session(printer)
-    pprint(printer.stats)
 
-    if reset:
-        session.reset_waste_ink_levels()
-        print("\nReset done! New stats:")
-        pprint(printer.stats)
-
-def parse_arguments():
-    parser = argparse.ArgumentParser(description="SNMP handler for Epson printers.")
+def parse_args() -> argparse.Namespace:
+    """Parse command-line arguments and return Namespace instance."""
+    parser = argparse.ArgumentParser(
+        description="SNMP handler for Epson printers.",
+        epilog=f"Supported models: {', '.join(Model.get_all().keys())}",
+    )
     parser.add_argument("host", nargs="?", help="IP address of the printer")
-    parser.add_argument("model", nargs='*', help="Model of the printer")
-    parser.add_argument("-r", "--reset", action="store_true", help="Reset printer waste ink counter")
+    parser.add_argument("model", nargs="*", help="Model of the printer")
+    parser.add_argument(
+        "-r", "--reset", action="store_true", help="Reset printer waste ink counters"
+    )
 
     args = parser.parse_args()
 
-    if args.host == None:
+    if not args.host:
         args.host = input("IP address of printer: ")
-    if args.model == []:
+    if not args.model:
         args.model = Model.select()
     else:
-        args.model = ' '.join(args.model)
+        args.model = " ".join(args.model)
 
-    return vars(args)
+    return args
 
-if __name__ == '__main__':
-    main(**parse_arguments())
+
+def main() -> None:
+    """Output printer statistics and optionally reset waste ink levels."""
+    args = parse_args()
+
+    printer = Printer.from_model(args.host, args.model)
+    session = Session(printer)
+
+    if args.reset:
+        session.reset_waste_ink_levels()
+    pprint(printer.stats)
+
+
+if __name__ == "__main__":
+    main()
