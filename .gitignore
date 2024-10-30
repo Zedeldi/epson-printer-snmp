@@ -161,3 +161,5 @@ cython_debug/
 
 # Project files
 logs/
+
+.direnv/
