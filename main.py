@@ -143,10 +143,7 @@ class Session(easysnmp.Session):
 
     def dump_eeprom(self: "Session", start: int = 0, end: int = 0xFF) -> dict[int, int]:
         """Dump EEPROM data from start to end."""
-        d = {}
-        for oid in range(start, end):
-            d[oid] = int(self.read_eeprom(oid), 16)
-        return d
+        return {oid: int(self.read_eeprom(oid), 16) for oid in range(start, end)}
 
     def get_model(self: "Session") -> str:
         """Return model of printer."""
@@ -172,10 +169,9 @@ class Session(easysnmp.Session):
     def get_ink_levels(self: "Session") -> dict[str, int]:
         """Return ink levels of printer."""
         result = self.get_value(f"{self.printer.eeprom_link}.115.116.1.0.1")
-        d = {
+        return {
             colour: ord(result[idx]) for colour, idx in self.printer.ink_levels.items()
         }
-        return d
 
     def get_waste_ink_levels(self: "Session") -> list[float]:
         """Return waste ink levels as a percentage."""
