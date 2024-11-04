@@ -5,6 +5,17 @@
 The first thing you want to do is install [WICReset](https://wic-reset.com>) and reset the waste ink counter with the `trial` key, only one use per printer.
 It will reset the printer counter from 100% to 80% and we want the 0%.
 Once you successfully reset your printer counter to 80%, go to `%APPDATA%\wicreset\application.log` on Windows or `~/.wicreset/application.log` on Linux-based systems.
+
+### Using `wicreset.py`
+
+`wicreset.py` will parse a WICReset log file and try to get the values for your printer.
+
+To do this, run `python wicreset.py --json <path to log>`, which will give you a model that you can add to `models.json`.
+
+If the structure is different to other printer models, this may fail and you'll need to [look through the logs manually](#manual).
+
+### Manual
+
 In `application.log`, you have to search for something similar to this (in this case we are using the Epson XP-700 Series): `RemoteControl::RESET_GUID RESET GUID: XP-700 Series 1061 KEY`.
 Just below this line, you should see a series of hexadecimal numbers.
 We're interested in the hexadecimal numbers with `REAL` at the end of each line.
@@ -58,6 +69,10 @@ If we do that with every single of them:
 237.1.0 (unknown format)
 ```
 
+To group the waste ink counters requires a bit of guessing.
+They tend to be consecutive and in pairs, such as (16, 17), (18, 19) and (20, 21).
+Some models have an extra value for some counters, which is usually set to 0 by WICReset during the 80% trial reset.
+
 Now we need to convert the value of group #1 in hexadecimal.
 In this case, `104 = 0x68` and `26 = 0x1A`.
 Then, we need to concatenate them in reverse, like this: `0x1A68` = `6760.0` in decimal.
@@ -65,11 +80,13 @@ After using WICReset with the trial key, we know the percentage is 80%.
 So, we take the value after concatenating the two hex values in reverse and use that to find the total:
 `(6760 / 80) * 100 = 8450.0`
 
-Maintenance levels are always set to `94`, so the OIDs with value `94` for maintenance.
+### Other Values
 
-To group the waste ink counters requires a bit of guessing.
-They tend to be consecutive and in pairs, such as (16, 17), (18, 19) and (20, 21).
-Some models have an extra value for some counters, which is usually set to 0 by WICReset during the 80% trial reset.
+Maintenance levels are always set to `94`, so the OIDs with value `94` are for maintenance.
+
+All other OIDs (not waste ink or maintenance) are unknown.
+
+### Result
 
 After putting everything together, we have this:
 ```
