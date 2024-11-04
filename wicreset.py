@@ -25,12 +25,7 @@ class WicresetLog:
 
     def get_model(self) -> str:
         """Return model from log."""
-        return " ".join(
-            component.strip()
-            for component in re.search("UpdatePresentList.*", self.content)[0].split(
-                "::"
-            )[1:3]
-        )
+        return re.search("RESET_GUID RESET GUID: (.*) [0-9]* KEY", self.content).group(1)
 
     def _get_waste_ink_reset_section(self) -> list[str]:
         """Return section for waste ink counter reset."""
