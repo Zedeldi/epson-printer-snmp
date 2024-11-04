@@ -2,7 +2,7 @@
 
 ### WICReset
 
-The first thing you want to do is install [WICReset](https://wic-reset.com>) and reset the waste ink counter with the `trial` key, only one use per printer.
+The first thing you want to do is install [WICReset](https://wic-reset.com) and reset the waste ink counter with the `trial` key, only one use per printer.
 It will reset the printer counter from 100% to 80% and we want the 0%.
 Once you successfully reset your printer counter to 80%, go to `%APPDATA%\wicreset\application.log` on Windows or `~/.wicreset/application.log` on Linux-based systems.
 
