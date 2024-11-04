@@ -81,6 +81,18 @@ To compare, `wicreset` writes the following values for the specified model of pr
 > Whenever a print job is received, the printer will compare the REAL data and the SHOWN data, then updates SHOWN data to the larger value.
 > After performing operations such as head cleaning that increase the counter, the printer increments the SHOWN data and saves it to both (24, 25, 30) and (28, 29).
 
+
+### Supported models
+
+| Tested    | Not tested |
+| -------- | ------- |
+| XP-700  | ET-2550    |
+| XP-540 | ET-2700     |
+| WF-7525    | L366     |
+| ET-2756    |      |
+
+
+
 ### WICReset
 
 > The WICReset utility and “key” allow end-users to reset the waste ink counter in their printer to clear errors related to waste ink (eg: “Parts inside your printer have reached the end of their service life”).
