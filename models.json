@@ -62,8 +62,8 @@
     "eeprom_write": "73.106.99.106.116.100.118.116",
     "ink_levels": {},
     "waste_inks": [
-      {"oids": [16, 17], "total": 6760.0},
-      {"oids": [18, 19], "total": 390.0},
+      {"oids": [16, 17], "total": 8450.0},
+      {"oids": [18, 19], "total": 2902.5},
       {"oids": [20, 21], "total": null}
     ],
     "maintenance_levels": [52, 53],
