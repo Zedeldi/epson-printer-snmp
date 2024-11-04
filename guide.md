@@ -61,4 +61,4 @@ And now we can put everything together and we have this:
 ```
 
 
-Guide made by [@j6ta](https://github.com/Zxuus)
+Guide made by [@j6ta](https://github.com/Zxuus) :)
