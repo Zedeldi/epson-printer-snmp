@@ -81,6 +81,18 @@ To compare, `wicreset` writes the following values for the specified model of pr
 > Whenever a print job is received, the printer will compare the REAL data and the SHOWN data, then updates SHOWN data to the larger value.
 > After performing operations such as head cleaning that increase the counter, the printer increments the SHOWN data and saves it to both (24, 25, 30) and (28, 29).
 
+### WICReset
+
+> The WICReset utility and “key” allow end-users to reset the waste ink counter in their printer to clear errors related to waste ink (eg: “Parts inside your printer have reached the end of their service life”).
+
+The key, `trial`, can be used to reset your counters to 80% for free. After packet sniffing with `wireshark`, the correct OIDs can be found.
+
+The application also stores a log containing SNMP information at `~/.wicreset/application.log` on Linux-based systems, or `%APPDATA%\wicreset\application.log` on Windows.
+
+Once the log has been found, you can use `wicreset.py <path to log>` to automatically parse and guess the OID structure of your printer.
+
+If the structure is similar to other printers and the results look sane, please add the model to `models.json` and submit a pull request.
+
 ## Libraries
 
 - [easysnmp](https://pypi.org/project/easysnmp/) - SNMP
@@ -88,13 +100,13 @@ To compare, `wicreset` writes the following values for the specified model of pr
 ## Resources
 
 reink-net = <https://github.com/gentu/reink-net>
-  - Used as a starting point to create this Python implementation and translated for different model of printer
+  - Used as a starting point to create this Python implementation and translated for a different model of printer
 
 epson-l4160-ink-waste-resetter = <https://github.com/nicootto/epson-l4160-ink-waste-resetter>
 
+epson_print_conf = <https://github.com/Ircama/epson_print_conf>
+
 wicreset = <https://wic-reset.com> / <https://www.2manuals.com> / <https://resetters.com>
-  - The key, `trial`, can be used to reset your counters to 80%. After packet sniffing with `wireshark`, the correct OIDs can be found
-  - This application also stores a log containing SNMP information at `~/.wicreset/application.log` on Linux-based systems, or `%APPDATA%\wicreset\application.log` on Windows.
 
 ## License
 
