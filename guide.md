@@ -59,3 +59,6 @@ And now we can put everything together and we have this:
     "unknown_oids": [6, 237]
   }
 ```
+
+
+Guide made by [@j6ta](github.com/Zxuus)
