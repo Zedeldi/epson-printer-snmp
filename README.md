@@ -102,6 +102,22 @@ Once the log has been found, you can use `wicreset.py <path to log>` to automati
 
 If the structure is similar to other printers and the results look sane, please add the model to `models.json` and submit a pull request.
 
+## Usage
+
+Run: `python main.py` (interactive) or `python main.py [host] [model ...]` (command-line arguments)
+
+See `python main.py --help` for more information.
+
+Parse WICReset logs: `wicreset.py <path to log>`
+
+### Docker
+
+A minimal Dockerfile is provided to easily build an image with the relevant `net-snmp` packages installed.
+
+Build: `docker build -t "epson-printer-snmp" .`
+
+Run: `docker run -it --rm "epson-printer-snmp"`
+
 ## Libraries
 
 - [easysnmp](https://pypi.org/project/easysnmp/) - SNMP
