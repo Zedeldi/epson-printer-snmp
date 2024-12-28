@@ -99,7 +99,7 @@ Model not listed? See this [guide](CONTRIBUTING.md) by [@j6ta](https://github.co
 
 The key, `trial`, can be used to reset your counters to 80% for free. After packet sniffing with `wireshark`, the correct OIDs can be found.
 
-The application also stores a log containing SNMP information at `~/.wicreset/application.log` on Linux-based systems, or `%APPDATA%\wicreset\application.log` on Windows.
+The application also stores a log containing SNMP information at `~/.wicreset/application.log` on Linux-based systems, `%APPDATA%\wicreset\application.log` on Windows or `~/Library/Application Support/wicreset/` for Mac OS. 
 
 Once the log has been found, you can use `wicreset.py <path to log>` to automatically parse and guess the OID structure of your printer.
 
