@@ -118,5 +118,17 @@
       {"oids": [48, 49], "total": 19173.75},
       {"oids": [53, 54], "total": null}
     ]
+  },
+  "EPSON XP-422": {
+    "password": [85, 5],
+    "eeprom_link": "1.3.6.1.4.1.1248.1.2.2.44.1.1.2.1",
+    "eeprom_write": "78.118.116.100.98.115.106.47",
+    "ink_levels": {},
+    "waste_inks": [
+      {"oids": [24, 25], "total": 3990},
+      {"oids": [26, 27], "total": 3235}
+    ],
+    "maintenance_levels": [46, 47],
+    "unknown_oids": [30, 28, 49]
   }
 }
