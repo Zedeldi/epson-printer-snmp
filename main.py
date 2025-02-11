@@ -237,6 +237,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "-b", "--brute-force", action="store_true", help="Brute force printer password"
     )
+    parser.add_argument(
+        "-d", "--dump", action="store_true", help="Dump EEPROM of printer (0-255)"
+    )
 
     args = parser.parse_args()
 
@@ -261,6 +264,8 @@ def main() -> None:
         if not session.brute_force():
             print("Failed to find printer password. Exiting...")
             sys.exit(1)
+    if args.dump:
+        pprint(session.dump_eeprom())
     if args.reset:
         session.reset_waste_ink_levels()
     pprint(printer.stats)
