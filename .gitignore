@@ -161,3 +161,8 @@ cython_debug/
 
 # Project files
 logs/
+
+# Prettier formatter
+node_modules/
+package.json
+package-lock.json
