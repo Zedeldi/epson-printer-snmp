@@ -8,7 +8,7 @@ Read information and reset waste ink counters on Epson printers, using SNMP.
 
 This project was designed for a EPSON WF-7525 Series printer, but inspired by [projects](#resources) for other models.
 Hopefully, releasing this code will help save a printer from the trash and improve consumer repairability for these devices.
-Information about specific models is stored in `models.json`, as a dictionary.
+Information about specific models is stored in `models.json`.
 Feel free to raise an issue/pull request for [adding support](CONTRIBUTING.md) for another model of printer, with logs from `wicreset` or similar attached.
 
 The format for reading values is:
@@ -86,10 +86,10 @@ To compare, `wicreset` writes the following values for the specified model of pr
 | Tested     | Not tested |
 | ---------- | ---------- |
 | ET-2700    | ET-2550    |
-| ET-2756    | L366       |
-| L3060      | L655       |
-| WF-7525    |            |
-| XP-422     |            |
+| ET-2756    | ET-2750    |
+| L3060      | L3150      |
+| WF-7525    | L366       |
+| XP-422     | L655       |
 | XP-520     |            |
 | XP-540     |            |
 | XP-700     |            |
@@ -107,6 +107,7 @@ The application also stores a log containing SNMP information at `~/.wicreset/ap
 Once the log has been found, you can use `wicreset.py <path to log>` to automatically parse and guess the OID structure of your printer.
 
 If the structure is similar to other printers and the results look sane, please add the model to `models.json` and submit a pull request.
+[`prettier`](https://prettier.io/) is used for JSON formatting.
 
 ## Usage
 
