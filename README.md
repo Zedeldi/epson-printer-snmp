@@ -87,9 +87,10 @@ To compare, `wicreset` writes the following values for the specified model of pr
 | ---------- | ---------- |
 | ET-2700    | ET-2550    |
 | ET-2756    | ET-2750    |
-| L3060      | L3150      |
-| WF-7525    | L366       |
-| XP-422     | L655       |
+| ET-4700    | L3150      |
+| L3060      | L366       |
+| WF-7525    | L655       |
+| XP-422     |            |
 | XP-520     |            |
 | XP-540     |            |
 | XP-700     |            |
