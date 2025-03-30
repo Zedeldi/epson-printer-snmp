@@ -118,6 +118,31 @@ See `python main.py --help` for more information.
 
 Parse WICReset logs: `wicreset.py <path to log>`
 
+### MacOS Python Setup For Easysnmp
+
+An alternative to the solution below is to simply utilize the Docker container (see below) to avoid any dependency conflicts and simplify setting up the script.
+
+If you are interested in a local installation you will want to setup a new Python environment since a direct installation of easysnmp via pip seems to have a number of known issues.
+Follow these steps to do a local install on a Mac:
+1. Create a New Python Environment.
+Using either 'venv' or 'conda' to create a dedicated environment.
+
+2. Install System Dependencies.
+Install all of the necessary system libraries using Homebrew:
+	'brew install net-snmp opensll gcc make'
+
+3. Verify Environment Variables
+Ensure that the environment variables for your shell are correctly set.
+Verify that brew installed paths are present by running: 'echo $PATH'
+
+4. Clone the easynmp Repository.
+Clone the github repository:
+'git clone <https://github.com/easysnmp/easysnmp.git>'
+
+5. Install easysnmp
+Navigate to the cloned directory 'cd easysnmp'
+Install the package 'pip install -e .'
+
 ### Docker
 
 A minimal Dockerfile is provided to easily build an image with the relevant `net-snmp` packages installed.
