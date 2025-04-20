@@ -97,13 +97,16 @@ class WicresetLog:
         return [group for group in oids if len(group) > 1]
 
     def get_waste_ink_totals(
-        self, percentage: int = 80
+        self,
+        percentage: int = 80,
+        strict: bool = True,
+        groups: list[list[int]] | None = None,
     ) -> dict[tuple[int], int | None]:
         """Return tuple of waste ink counter totals."""
-        groups = self.get_waste_ink_groups()
+        groups = groups or self.get_waste_ink_groups()
         writes = self.get_waste_ink_reset_values_as_dict()
         totals = {}
-        if len(groups) != 3 or any(len(group) > 2 for group in groups):
+        if strict and (len(groups) != 3 or any(len(group) > 2 for group in groups)):
             raise ValueError("Unknown structure of waste ink counters")
         for group in groups:
             hex_str = ""
