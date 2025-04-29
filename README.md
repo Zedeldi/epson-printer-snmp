@@ -87,10 +87,10 @@ To compare, `wicreset` writes the following values for the specified model of pr
 | ---------- | ---------- |
 | ET-2700    | ET-2550    |
 | ET-2750    | L3150      |
-| ET-2756    | L366       |
-| ET-4700    | L455       |
-| L3060      | L655       |
-| WF-7525    |            |
+| ET-2756    | L365       |
+| ET-4700    | L366       |
+| L3060      | L455       |
+| WF-7525    | L655       |
 | XP-422     |            |
 | XP-520     |            |
 | XP-540     |            |
@@ -104,7 +104,7 @@ Model not listed? See this [guide](CONTRIBUTING.md) by [@j6ta](https://github.co
 
 The key, `trial`, can be used to reset your counters to 80% for free. After packet sniffing with `wireshark`, the correct OIDs can be found.
 
-The application also stores a log containing SNMP information at `~/.wicreset/application.log` on Linux-based systems, `%APPDATA%\wicreset\application.log` on Windows or `~/Library/Application Support/wicreset/` for Mac OS. 
+The application also stores a log containing SNMP information at `~/.wicreset/application.log` on Linux-based systems, `%APPDATA%\wicreset\application.log` on Windows or `~/Library/Application Support/wicreset/` for Mac OS.
 
 Once the log has been found, you can use `wicreset.py <path to log>` to automatically parse and guess the OID structure of your printer.
 
