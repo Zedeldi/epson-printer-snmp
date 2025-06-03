@@ -21,6 +21,16 @@ Just below this line, you should see a series of hexadecimal numbers.
 We're interested in the hexadecimal numbers with `REAL` at the end of each line.
 It should look like this: `7C 7C 10 00 28 00 42 BD 21 10 00 68 49 6A 63 6A 74 64 76 74`.
 Now we convert every single one of them to a decimal and then add dots between numbers.
+
+#### Code Snippet for converting the hex string into the required decimal format
+```python
+hex_string = input("Enter a hex string: ")
+hex_list = hex_string.split(" ")  # Split string into a list
+decimal_list = [int(hex_num, 16) for hex_num in hex_list]  # Convert each hex to decimal
+decimal_string = ".".join(map(str, decimal_list))
+print(f"Decimal format: {decimal_string}")
+```
+
 They should look like this: `124.124.16.0.40.0.66.189.33.16.0.104.73.106.99.106.116.100.118.116`.
 Do this with every single one of them; there's about 10.
 
