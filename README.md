@@ -22,7 +22,7 @@ The format for setting values is:
 Where `eeprom_link` is consistently `1.3.6.1.4.1.1248.1.2.2.44.1.1.2.1` and `password` is two values, e.g. `101.0`. `password` and `eeprom_write` seem to vary between different models of printer. This can be found by using a tool, such as `wicreset`, and checking the request it sends.
 A method for brute forcing the password is provided in `Session.brute_force`, which tries to get a value from the EEPROM, for every permutation of `[0x00, 0x00]` to `[0xFF, 0xFF]`.
 
-Setting values is done by *getting* an address, where the OID and value to set is specified in the query.
+Setting values is done by _getting_ an address, where the OID and value to set is specified in the query.
 Certain values of these formats also vary between models of printer.
 
 Various methods are defined to get specific information.
@@ -32,12 +32,14 @@ Values for waste ink levels are stored across multiple addresses, which, when re
 This value is then divided by a constant, which again seems to vary across models of printer, to make the percentage.
 The constant value can be found by using `wicreset` to read the counters' percentage, getting the hex values of these OIDs, then following the above process to solve:
 e.g.
+
 ```
 # Percentage is 80%.
 # Hex values are (0x68, 0x3d) => 0x3d68
 
 (0x3d68 / 80) * 100 = 19650.0
 ```
+
 Please note that different counters for the same printer may use different constants.
 
 Courtesy of [@PeaShooterR](https://github.com/PeaShooterR), some models of printers seem to store waste ink counters in a slightly different way, across three counters instead of two (see issue [#1](https://github.com/Zedeldi/epson-printer-snmp/issues/1)).
@@ -49,7 +51,7 @@ To compare, `wicreset` writes the following values for the specified model of pr
 <tr><td>
 
 | OID | Value | Usage               |
-|-----|-------|---------------------|
+| --- | ----- | ------------------- |
 | 20  | 104   | Counter 1 (shown)   |
 | 21  | 61    | Counter 1 (shown)   |
 | 22  | 68    | Counter 2 (shown)   |
@@ -63,7 +65,7 @@ To compare, `wicreset` writes the following values for the specified model of pr
 </td><td>
 
 | OID | Value | Usage               |
-|-----|-------|---------------------|
+| --- | ----- | ------------------- |
 | 24  | 120   | Counter 1 (shown)   |
 | 25  | 12    | Counter 1 (shown)   |
 | 26  | 44    | Counter 2 (shown)   |
@@ -83,24 +85,24 @@ To compare, `wicreset` writes the following values for the specified model of pr
 
 ### Supported models
 
-| Tested  | Not tested    |
-|---------|---------------|
-| ET-2500 | ET-2550       |
-| ET-2700 | L3150         |
-| ET-2750 | L366          |
-| ET-2756 | L455          |
-| ET-4700 | L655          |
-| L3060   |               |
-| L365    |               |
-| L386    |               |
-| WF-7525 |               |
-| XP-322  | XP-323 XP-325 |
-| XP-352  |               |
-| XP-355  |               |
-| XP-422  |               |
-| XP-520  |               |
-| XP-540  |               |
-| XP-700  |               |
+| Tested  | Not tested |
+| ------- | ---------- |
+| ET-2500 | ET-2550    |
+| ET-2700 | L3150      |
+| ET-2750 | L366       |
+| ET-2756 | L455       |
+| ET-4700 | L655       |
+| L3060   | XP-323     |
+| L365    | XP-325     |
+| L386    |            |
+| WF-7525 |            |
+| XP-322  |            |
+| XP-352  |            |
+| XP-355  |            |
+| XP-422  |            |
+| XP-520  |            |
+| XP-540  |            |
+| XP-700  |            |
 
 Model not listed? See this [guide](CONTRIBUTING.md) by [@j6ta](https://github.com/Zxuus).
 
@@ -168,7 +170,8 @@ Run: `docker run -it --rm "epson-printer-snmp"`
 ## Resources
 
 reink-net = <https://github.com/gentu/reink-net>
-  - Used as a starting point to create this Python implementation and translated for a different model of printer
+
+- Used as a starting point to create this Python implementation and translated for a different model of printer
 
 epson-l4160-ink-waste-resetter = <https://github.com/nicootto/epson-l4160-ink-waste-resetter>
 
