@@ -181,6 +181,19 @@
       {"oids": [24, 25], "total": null}
     ]
   },
+  "EPSON XP-255 257 Series": {
+    "eeprom_link": "1.3.6.1.4.1.1248.1.2.2.44.1.1.2.1",
+    "eeprom_write": "84.118.115.98.110.98.101.118",
+    "ink_levels": {},
+    "maintenance_levels": [46, 47],
+    "password": [49, 6],
+    "unknown_oids": [30, 34, 49],
+    "waste_inks": [
+      {"oids": [24, 25], "total": 3990.0},
+      {"oids": [28, 29], "total": null},
+      {"oids": [26, 27], "total": 3255.0}
+    ]
+  },
   "EPSON XP-322 323 325 Series": {
     "eeprom_link": "1.3.6.1.4.1.1248.1.2.2.44.1.1.2.1",
     "eeprom_write": "78.118.116.100.98.115.106.47",
