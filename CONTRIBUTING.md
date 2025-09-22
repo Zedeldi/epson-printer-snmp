@@ -23,6 +23,7 @@ It should look like this: `7C 7C 10 00 28 00 42 BD 21 10 00 68 49 6A 63 6A 74 64
 Now we convert every single one of them to a decimal and then add dots between numbers.
 
 #### Code Snippet for converting the hex string into the required decimal format
+
 ```python
 hex_string = input("Enter a hex string: ")
 hex_list = hex_string.split(" ")  # Split string into a list
@@ -43,6 +44,7 @@ Then, we have the `66.189.33` and the `oid` (`16`) with a `value` (`104`) and th
 ### Model
 
 To create our model, start with the following template:
+
 ```
 "EPSON YOURMODEL": {
     "password": [, ],
@@ -65,6 +67,7 @@ We need to calculate the totals for the waste ink counters.
 
 One of the OIDs and values looks like this: `16.0.104` for the Epson XP-700, so the OID is 16 with a value of 104.
 If we do that with every single of them:
+
 ```
 16 = 104 (group #1)
 17 = 26 (group #1)
@@ -99,6 +102,7 @@ All other OIDs (not waste ink or maintenance) are unknown.
 ### Result
 
 After putting everything together, we have this:
+
 ```
 "EPSON XP-700": {
     "password": [40, 0],
