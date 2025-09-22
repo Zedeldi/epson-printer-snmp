@@ -103,6 +103,7 @@ To compare, `wicreset` writes the following values for the specified model of pr
 | XP-520  |            |
 | XP-540  |            |
 | XP-700  |            |
+| XP-830  |            |
 
 Model not listed? See this [guide](CONTRIBUTING.md) by [@j6ta](https://github.com/Zxuus).
 
