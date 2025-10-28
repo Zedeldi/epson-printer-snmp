@@ -4,6 +4,7 @@ import argparse
 import itertools
 import json
 import re
+from collections.abc import Iterable
 from pathlib import Path
 from pprint import pprint
 
@@ -23,22 +24,26 @@ class WicresetLog:
         with open(self.path) as log:
             self.content = log.read()
 
-    def get_model(self) -> str:
+    def get_model(self) -> str | None:
         """Return model from log."""
-        return re.search("RESET_GUID RESET GUID: (.*) [0-9]* KEY", self.content).group(1)
+        match = re.search("RESET_GUID RESET GUID: (.*) [0-9]* KEY", self.content)
+        return match and match.group(1)
 
-    def _get_waste_ink_reset_section(self) -> list[str]:
+    def _get_waste_ink_reset_section(self) -> list[str] | None:
         """Return section for waste ink counter reset."""
-        return re.search(
+        match = re.search(
             r"Reset started\. Do not turn off the printer(?:(?!The input key does not exist).)+Reset complete",
             self.content,
             re.DOTALL,
-        )[0].splitlines()[1:-1]
+        )
+        return match and match[0].splitlines()[1:-1]
 
     def get_waste_ink_reset_writes_as_hex(self) -> list[str]:
         """Return list of lines for actual writes during reset as hex."""
         oids = []
         section = self._get_waste_ink_reset_section()
+        if not section:
+            raise ValueError("Cannot get waste ink reset section")
         for line in section:
             match = re.search(r".*RESET_DATA RESET DATA: [0-9]* -\s*.*", line)
             if not match:
@@ -58,7 +63,7 @@ class WicresetLog:
         write = self.get_waste_ink_reset_writes()[0].split(".")
         return write[-EEPROM_WRITE_LENGTH:]
 
-    def get_password(self) -> tuple[int, int]:
+    def get_password(self) -> tuple[int, ...]:
         """Return tuple for printer password."""
         password = (
             self.get_waste_ink_reset_writes()[0]
@@ -74,18 +79,18 @@ class WicresetLog:
         The format for setting values is:
         {eeprom_link}.124.124.16.0.{password}.66.189.33.{oid}.0.{value}.{eeprom_write}
         """
-        values = {}
+        values: dict[int, int] = {}
         writes = self.get_waste_ink_reset_writes()
         for write in writes:
             write = write.removeprefix(
                 f"{WRITE_PREFIX}{self.convert_list_to_oid(self.get_password())}{WRITE_MIDDLE}"
             ).removesuffix(f".{self.convert_list_to_oid(self.get_eeprom_write())}")
-            write = write.split(".")
             try:
-                write = ((int(write[0]), int(write[2])),)
-            except IndexError:
+                oid, _, value = write.split(".")
+            except ValueError:
                 continue
-            values.update(dict(write))
+            mapping = ((int(oid), int(value)),)
+            values.update(mapping)
         return values
 
     def get_waste_ink_groups(self) -> list[list[int]]:
@@ -101,7 +106,7 @@ class WicresetLog:
         percentage: int = 80,
         strict: bool = True,
         groups: list[list[int]] | None = None,
-    ) -> dict[tuple[int], int | None]:
+    ) -> dict[tuple[int, ...], float | None]:
         """Return tuple of waste ink counter totals."""
         groups = groups or self.get_waste_ink_groups()
         writes = self.get_waste_ink_reset_values_as_dict()
@@ -114,12 +119,10 @@ class WicresetLog:
                 hex_str += f"{writes[oid]:02x}"
             value = int(hex_str, 16)
             total = (value / percentage) * 100
-            if total == 0:
-                total = None
-            totals[tuple(group)] = total
+            totals[tuple(group)] = total if total != 0 else None
         return totals
 
-    def get_maintenance_levels(self) -> tuple[int, int]:
+    def get_maintenance_levels(self) -> tuple[int, ...]:
         """Return OIDs where maintenance levels are stored."""
         return tuple(
             oid
@@ -165,12 +168,12 @@ class WicresetLog:
         return ".".join(str(int(part, 16)) for part in oid.split())
 
     @staticmethod
-    def convert_list_to_oid(oid: list[int]) -> str:
+    def convert_list_to_oid(oid: Iterable[int | str]) -> str:
         """Convert list of strings to OID format."""
         return ".".join(str(part) for part in oid)
 
     @staticmethod
-    def get_consecutive_values(values: list[int]) -> list[list[int]]:
+    def get_consecutive_values(values: Iterable[int]) -> list[list[int]]:
         """Return groups of consecutive values from list."""
         return [
             [value[1] for value in group]
