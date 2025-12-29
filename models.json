@@ -206,19 +206,6 @@
       {"oids": [26, 27], "total": 3255.0}
     ]
   },
-  "XP-332 335 Series": {
-    "eeprom_link": "1.3.6.1.4.1.1248.1.2.2.44.1.1.2.1",
-    "eeprom_write": "81.112.109.122.121.102.111.98",
-    "ink_levels": {},
-    "maintenance_levels": [46, 47],
-    "password": [133, 5],
-    "unknown_oids": [30, 34, 49],
-    "waste_inks": [
-      {"oids": [24, 25], "total": 3990.0},
-      {"oids": [28, 29], "total": null},
-      {"oids": [26, 27], "total": 3255.0}
-    ]
-  },
   "EPSON XP-352": {
     "eeprom_link": "1.3.6.1.4.1.1248.1.2.2.44.1.1.2.1",
     "eeprom_write": "84.118.115.98.110.98.101.118",
@@ -320,6 +307,19 @@
       {"oids": [16, 17], "total": 8450.0},
       {"oids": [18, 19], "total": 3370.0},
       {"oids": [20, 21], "total": null}
+    ]
+  },
+  "XP-332 335 Series": {
+    "eeprom_link": "1.3.6.1.4.1.1248.1.2.2.44.1.1.2.1",
+    "eeprom_write": "81.112.109.122.121.102.111.98",
+    "ink_levels": {},
+    "maintenance_levels": [46, 47],
+    "password": [133, 5],
+    "unknown_oids": [30, 34, 49],
+    "waste_inks": [
+      {"oids": [24, 25], "total": 3990.0},
+      {"oids": [28, 29], "total": null},
+      {"oids": [26, 27], "total": 3255.0}
     ]
   }
 }
