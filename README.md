@@ -96,8 +96,8 @@ To compare, `wicreset` writes the following values for the specified model of pr
 | L365    | XP-257     |
 | L386    | XP-323     |
 | WF-7525 | XP-325     |
-| XP-322  | XP-530     |
-| XP-332  | XP-335     |
+| XP-322  | XP-335     |
+| XP-332  | XP-530     |
 | XP-352  |            |
 | XP-355  |            |
 | XP-422  |            |
@@ -163,9 +163,10 @@ A minimal Dockerfile is provided to easily build an image with the relevant `net
 
 Build: `docker build -t "epson-printer-snmp" .`
 
-Run dump info: `docker run -it --rm "epson-printer-snmp"`
+Run:
 
-Run execute reset: `docker run -it --rm "epson-printer-snmp" -r`
+- Dump printer information: `docker run -it --rm "epson-printer-snmp"`
+- Reset waste ink counters: `docker run -it --rm "epson-printer-snmp" --reset`
 
 ## Libraries
 
