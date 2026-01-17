@@ -47,17 +47,17 @@ To create our model, start with the following template:
 
 ```
 "EPSON YOURMODEL": {
-    "password": [, ],
     "eeprom_link": "1.3.6.1.4.1.1248.1.2.2.44.1.1.2.1",
     "eeprom_write": "",
     "ink_levels": {},
+    "maintenance_levels": [, ],
+    "password": [, ],
+    "unknown_oids": [],
     "waste_inks": [
       {"oids": [, ], "total": },
       {"oids": [, ], "total": },
       {"oids": [, ], "total": }
-    ],
-    "maintenance_levels": [, ],
-    "unknown_oids": []
+    ]
   }
 ```
 
@@ -105,17 +105,17 @@ After putting everything together, we have this:
 
 ```
 "EPSON XP-700": {
-    "password": [40, 0],
     "eeprom_link": "1.3.6.1.4.1.1248.1.2.2.44.1.1.2.1",
     "eeprom_write": "73.106.99.106.116.100.118.116",
     "ink_levels": {},
+    "maintenance_levels": [52, 53],
+    "password": [40, 0],
+    "unknown_oids": [6, 237],
     "waste_inks": [
       {"oids": [16, 17], "total": 8450.0},
       {"oids": [18, 19], "total": 2902.5},
       {"oids": [20, 21], "total": null}
-    ],
-    "maintenance_levels": [52, 53],
-    "unknown_oids": [6, 237]
+    ]
   }
 ```
 
