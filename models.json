@@ -75,6 +75,19 @@
       {"oids": [52, 53], "total": null}
     ]
   },
+   "EPSON ET-2826": {
+    "eeprom_link": "1.3.6.1.4.1.1248.1.2.2.44.1.1.2.1",
+    "eeprom_write": "78.98.115.106.99.98.122.98",
+    "ink_levels": {},
+    "maintenance_levels": [54, 55, 255],
+    "password": [74, 54],
+    "unknown_oids": [47, 52, 53, 28, 254],
+    "waste_inks": [
+      {"oids": [48, 49], "total": 6345.0 },
+      {"oids": [50, 51], "total": 3415.0 },
+      {"oids": [252, 253], "total": 1300.0 }
+    ]
+  },
   "EPSON ET-4700": {
     "eeprom_link": "1.3.6.1.4.1.1248.1.2.2.44.1.1.2.1",
     "eeprom_write": "78.98.115.106.99.98.122.98",
