@@ -126,6 +126,18 @@
       {"oids": [50, 51], "total": 3415.0}
     ]
   },
+  "EPSON L355": {
+    "password": [65, 9],
+    "eeprom_link": "1.3.6.1.4.1.1248.1.2.2.44.1.1.2.1",
+    "eeprom_write": "88.98.108.98.117.112.99.106",
+    "ink_levels": {},
+    "waste_inks": [
+      {"oids": [24, 25], "total": 6500.0},
+      {"oids": [28, 29], "total": null}
+    ],
+    "maintenance_levels": [46],
+    "unknown_oids": [30]
+  },
   "EPSON L365": {
     "eeprom_link": "1.3.6.1.4.1.1248.1.2.2.44.1.1.2.1",
     "eeprom_write": "72.102.115.99.102.115.98.43",
