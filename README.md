@@ -10,6 +10,7 @@ This project was designed for a EPSON WF-7525 Series printer, but inspired by [p
 Hopefully, releasing this code will help save a printer from the trash and improve consumer repairability for these devices.
 Information about specific models is stored in `models.json`.
 Feel free to raise an issue/pull request for [adding support](CONTRIBUTING.md) for another model of printer, with logs from `wicreset` or similar attached.
+Interfacing EEPROM over SNMP is blocked by Epson with newer Firmware version (e.g. XE19P5 from 19. May 2025 fot ET-2820 sereis). Need to downgrade the Frimware to perform access.
 
 The format for reading values is:
 
@@ -91,6 +92,7 @@ To compare, `wicreset` writes the following values for the specified model of pr
 | ET-2700 | L3150      |
 | ET-2750 | L366       |
 | ET-2756 | L455       |
+| ET-2826 | ET-2826    |
 | ET-4700 | L655       |
 | L3060   | XP-255     |
 | L365    | XP-257     |
@@ -120,6 +122,8 @@ Once the log has been found, you can use `wicreset.py <path to log>` to automati
 
 If the structure is similar to other printers and the results look sane, please add the model to `models.json` and submit a pull request.
 [`prettier`](https://prettier.io/) is used for JSON formatting.
+
+WICReset overs the Frimware downgrade option to an older Firmware. 
 
 ## Usage
 
