@@ -228,7 +228,7 @@
     "waste_inks": [
       { "oids": [24, 25], "total": 3990.0 },
       { "oids": [28, 29], "total": null },
-      { "oids": [26, 27], "total": 3254.9999999999995 }
+      { "oids": [26, 27], "total": 3255 }
     ]
   },
   "EPSON XP-255 257 Series": {
