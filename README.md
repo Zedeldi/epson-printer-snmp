@@ -10,7 +10,6 @@ This project was designed for a EPSON WF-7525 Series printer, but inspired by [p
 Hopefully, releasing this code will help save a printer from the trash and improve consumer repairability for these devices.
 Information about specific models is stored in `models.json`.
 Feel free to raise an issue/pull request for [adding support](CONTRIBUTING.md) for another model of printer, with logs from `wicreset` or similar attached.
-Interfacing EEPROM over SNMP is blocked by Epson with newer Firmware version (e.g. XE19P5 from 19. May 2025 for ET-2820 sereis). Firmware downgrade is required to grant EEPROM access.
 
 The format for reading values is:
 
@@ -25,6 +24,10 @@ A method for brute forcing the password is provided in `Session.brute_force`, wh
 
 Setting values is done by _getting_ an address, where the OID and value to set is specified in the query.
 Certain values of these formats also vary between models of printer.
+
+[@mazj42](https://github.com/mazj42) found that interfacing with EEPROM over SNMP
+is blocked by Epson for newer firmware versions (e.g. XE19P5 from 19th May 2025 for ET-2820 Series).
+A firmware downgrade is required to grant EEPROM access (see [WICReset](#wicreset)).
 
 Various methods are defined to get specific information.
 The `Printer.stats` method will return a dictionary of most useful information.
@@ -117,6 +120,8 @@ Model not listed? See this [guide](CONTRIBUTING.md) by [@j6ta](https://github.co
 
 > The WICReset utility and “key” allow end-users to reset the waste ink counter in their printer to clear errors related to waste ink (eg: “Parts inside your printer have reached the end of their service life”).
 
+If required, WICReset also supports downgrading printer firmware.
+
 The key, `trial`, can be used to reset your counters to 80% for free. After packet sniffing with `wireshark`, the correct OIDs can be found.
 
 The application also stores a log containing SNMP information at `~/.wicreset/application.log` on Linux-based systems, `%APPDATA%\wicreset\application.log` on Windows or `~/Library/Application Support/wicreset/` for Mac OS.
@@ -125,8 +130,6 @@ Once the log has been found, you can use `wicreset.py <path to log>` to automati
 
 If the structure is similar to other printers and the results look sane, please add the model to `models.json` and submit a pull request.
 [`prettier`](https://prettier.io/) is used for JSON formatting.
-
-WICReset allows frimware downgrade option to an older firmware. 
 
 ## Usage
 
