@@ -16,6 +16,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from pprint import pprint
 from typing import Any
+from typing import Optional
 
 import easysnmp
 
@@ -126,15 +127,23 @@ class Session(easysnmp.Session):
             f".{self.printer.eeprom_write}"
         )
 
-    def read_eeprom(self: Session, oid: int) -> str:
-        """Read EEPROM data."""
-        response = self.get_value(self.get_read_eeprom_oid(oid))
-        response = re.findall(r"EE:[0-9A-F]{6}", response)[0][3:]
-        chk_addr = response[2:4]
-        value = response[4:6]
+    def read_eeprom(self: "Session", oid: int) -> Optional[str]:
+        raw = self.get_value(self.get_read_eeprom_oid(oid))
+        # if response contains NA EEPROM Read denied raw: "||:41:NA;"
+        if "NA" in raw:
+            raise ValueError(f"EEPROM read not available for oid={oid}. raw={raw!r}")
+
+        m = re.search(r"EE:\s*([0-9A-Fa-f]{6})", raw)
+        if not m:
+            raise ValueError(f"EEPROM pattern not found in response for oid={oid}. raw={raw!r}")
+
+        payload = m.group(1)  # 6 Hex-Zeichen
+        chk_addr = payload[2:4]
+        value = payload[4:6]
+
         if int(chk_addr, 16) != oid:
             raise ValueError(
-                f"Address and response address are not equal: {oid} != {chk_addr}"
+                f"Address mismatch: oid={oid} resp={int(chk_addr, 16)} (chk_addr={chk_addr}, raw={raw!r})"
             )
         return value
 
@@ -146,9 +155,14 @@ class Session(easysnmp.Session):
         """Write value to OID with specified type to EEPROM."""
         self.get(self.get_write_eeprom_oid(oid, value))
 
-    def dump_eeprom(self: Session, start: int = 0, end: int = 0xFF) -> dict[int, int]:
-        """Dump EEPROM data from start to end."""
-        return {oid: int(self.read_eeprom(oid), 16) for oid in range(start, end)}
+    def dump_eeprom(self: "Session", start: int = 0, end: int = 0xFF) -> dict[int, int]:
+        out = {}
+        for oid in range(start, end + 1):
+            v = self.read_eeprom(oid)
+            if v is None:
+                continue
+            out[oid] = int(v, 16)
+        return out
 
     def get_model(self: Session) -> str:
         """Return model of printer."""
