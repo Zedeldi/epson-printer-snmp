@@ -142,7 +142,7 @@ Parse WICReset logs: `wicreset.py <path to log>`
 
 ### macOS
 
-> > [!TIP]
+> [!TIP]
 > An alternative to the solution below is to utilise the [Dockerfile](#Docker)
 > to create an environment with the required dependencies and simplify setting up the script.
 
